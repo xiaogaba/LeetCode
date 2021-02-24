@@ -1,0 +1,47 @@
+class WordDictionary {
+    
+    /** Initialize your data structure here. */
+    TrieNode root; 
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+    
+    public void addWord(String word) {
+        TrieNode p = root;
+        for (int i = 0; i < word.length(); ++i) {
+            char c  = word.charAt(i);
+            if (p.children[c - 'a'] == null) {
+                p.children[c - 'a'] = new TrieNode();
+            }
+            p = p.children[c - 'a'];
+        }
+        p.isWord = true;
+    }
+    
+    public boolean search(String word) {
+        return match(word.toCharArray(), 0, root);
+    }
+    public boolean match(char[] word, int i, TrieNode p) {
+        if (i == word.length) {
+            return p.isWord;
+        }
+        if (word[i] == '.') {
+            for (int k = 0; k < p.children.length; ++k) {
+                if (p.children[k] != null && match(word, i + 1, p.children[k])) {
+                    return true;
+                }
+            }
+        } else {
+            if (p.children[word[i] - 'a'] != null && match(word, i + 1, p.children[word[i] - 'a'])) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+class TrieNode {
+    public TrieNode[] children = new TrieNode[26];
+    public boolean isWord;
+    TrieNode() {}
+ };
