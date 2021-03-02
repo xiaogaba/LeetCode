@@ -1,0 +1,57 @@
+class AutocompleteSystem {
+    class TrieNode {
+        Map<Character, TrieNode> children = new HashMap<>();
+        Map<String, Integer> counts = new HashMap<>();
+        public TrieNode(){};
+    }
+    TrieNode root;
+    String prefix;
+
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        root = new TrieNode();
+        prefix = "";
+        for (int i = 0; i < sentences.length; ++i) {
+            add(sentences[i], times[i]);
+        }
+    }
+    
+    public List<String> input(char c) {
+        if (c == '#') {
+            add(prefix, 1);
+            prefix = "";
+            return new ArrayList<String>();
+        }
+        prefix = prefix + c;
+        TrieNode p = root;
+        for(char ch: prefix.toCharArray()) {
+            TrieNode cc = p.children.get(ch);
+            if (cc == null) {
+                return new ArrayList<String>();
+            }
+            p = cc;
+        }
+        
+        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>((a,b) -> (a.getValue() == b.getValue()? a.getKey().compareTo(b.getKey()): b.getValue() - a.getValue()));
+        pq.addAll(p.counts.entrySet());
+        List<String> res = new ArrayList<String>();
+        int k = 3;
+        while(!pq.isEmpty() && k > 0) {
+            res.add(pq.poll().getKey());
+            k--;
+        }
+        return res;
+    }
+    
+    public void add(String s, int count) {
+        TrieNode p = root;
+        for (char c: s.toCharArray()) {
+            TrieNode next = p.children.get(c);
+            if (next == null) {
+                next = new TrieNode();
+                p.children.put(c, next);
+            }
+            p = next;
+            p.counts.put(s, p.counts.getOrDefault(s, 0) + count);
+        }
+    }
+}
