@@ -1,0 +1,27 @@
+class MyCalendarThree {
+//     List<int[]> books = new ArrayList<>();
+//     public MyCalendarThree() {
+        
+//     }
+    TreeMap<Integer, Integer> books = new TreeMap<>();
+    public int book(int start, int end) {
+        // books.add(new int[]{start, end});
+        // Collections.sort(books, (a, b) -> a[0] - b[0]);
+        // PriorityQueue<Integer> pq = new PriorityQueue<>();
+        // for (int[] book: books) {
+        //     if (!pq.isEmpty() && book[0] >= pq.peek()) {
+        //         pq.poll();
+        //     }
+        //     pq.add(book[1]);
+        // }
+        // return pq.size();
+        books.put(start, books.getOrDefault(start, 0) + 1);
+        books.put(end, books.getOrDefault(end, 0) - 1);
+        int onGoing = 0;
+        int res = 0;
+        for (int t: books.values()) {
+            res = Math.max(res, onGoing += t);
+        }
+        return res;
+    }
+}
