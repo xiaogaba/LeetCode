@@ -1,0 +1,24 @@
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> res = new ArrayList<>();
+        int start = newInterval[0];
+        int end = newInterval[1];
+        for (int[] interval: intervals) {
+            int curStart = interval[0];
+            int curEnd = interval[1];
+            if (end < curStart) {
+                res.add(new int[]{start, end} );
+                start = curStart;
+                end = curEnd;
+            } else if (start > curEnd) {
+                res.add(new int[]{curStart, curEnd});
+            } else {
+                start = Math.min(start, curStart);
+                end = Math.max(end, curEnd);
+            }
+        }
+        res.add(new int[]{start, end});
+        return res.toArray(new int[res.size()][]);
+    }
+    
+}
